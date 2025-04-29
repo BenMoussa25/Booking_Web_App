@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<section class="auth-form-section">
+    <div class="auth-form-container">
+        <h2 class="form-title">Login to Your Account</h2>
+        <form method="POST" class="cyber-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required class="cyber-input">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required class="cyber-input">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+        <div class="auth-form-footer">
+            <p>Don't have an account? <a href="{{ url_for('register') }}" class="text-link">Register here</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}  

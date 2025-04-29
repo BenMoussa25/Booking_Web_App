@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking Confirmation</title>
+</head>
+<body>
+    <h2>Your Booking Has Been Approved!</h2>
+    <p>Hello {{ user.username }},</p>
+    
+    <p>We're excited to confirm your participation in:</p>
+    
+    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 15px 0;">
+        <h3>{{ event.name }}</h3>
+        <p><strong>Location:</strong> {{ event.location }}</p>
+        <p><strong>Date:</strong> {{ event.start_time.strftime('%B %d, %Y') }}</p>
+        <p><strong>Time:</strong> {{ event.start_time.strftime('%I:%M %p') }} - {{ event.end_time.strftime('%I:%M %p') }}</p>
+        <p><strong>Description:</strong> {{ event.description }}</p>
+    </div>
+    
+    <p>Please arrive 15 minutes before the event starts.</p>
+    
+    <p>If you can no longer attend, please cancel your booking through your dashboard.</p>
+    
+    <p>Best regards,<br>
+    The Event Team</p>
+</body>
+</html>

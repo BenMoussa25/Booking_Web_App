@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Join Team{% endblock %}
+
+{% block content %}
+<section class="auth-form-section">
+    <div class="auth-form-container">
+        <h2 class="form-title">Join Existing Team</h2>
+        <form method="POST" class="cyber-form">
+            <div class="form-group">
+                <label for="team_name">Team Name</label>
+                <input type="text" id="team_name" name="team_name" required class="cyber-input">
+            </div>
+            <div class="form-group">
+                <label for="team_password">Team Password</label>
+                <input type="password" id="team_password" name="team_password" required class="cyber-input">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Join Team</button>
+        </form>
+        <div class="auth-form-footer">
+            <p>Want to create a team instead? <a href="{{ url_for('create_team') }}" class="text-link">Create Team</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

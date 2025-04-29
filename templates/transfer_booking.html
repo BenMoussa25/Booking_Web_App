@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Transfer Booking{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <h2 class="section-title">Transfer Booking</h2>
+    
+    <div class="transfer-info">
+        <p>Transfer booking for <strong>{{ booking.user.username }}</strong></p>
+        <p>Current event: <strong>{{ booking.event.name }}</strong></p>
+    </div>
+    
+    <form method="POST" class="cyber-form">
+        <div class="form-group">
+            <label for="new_event_id">Select New Event</label>
+            <select id="new_event_id" name="new_event_id" class="cyber-input" required>
+                {% for event in events %}
+                <option value="{{ event.id }}">
+                    {{ event.name }} ({{ event.current_participants }}/{{ event.max_participants }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-primary">Transfer Booking</button>
+            <a href="{{ url_for('admin') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

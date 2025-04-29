@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Team Management - {{ team.name }}{% endblock %}
+
+{% block content %}
+<section class="team-section">
+    <div class="team-container">
+        <div class="team-header">
+            <h2 class="team-name">{{ team.name }}</h2>
+            <span class="team-status">
+                {% if team.members|length >= 4 %}
+                <span class="status-badge status-full">Full</span>
+                {% else %}
+                <span class="status-badge status-open">Open ({{ team.members|length }}/4)</span>
+                {% endif %}
+            </span>
+        </div>
+        
+        <div class="team-details">
+            {% if team.event %}
+            <div class="detail-card">
+                <h3 class="detail-title">Competition</h3>
+                <p class="detail-value">{{ team.event.name }}</p>
+            </div>
+            {% endif %}
+            
+            <div class="detail-card">
+                <h3 class="detail-title">Team Members</h3>
+                <ul class="member-list">
+                    {% for member in team.members %}
+                    <li class="member-item {% if member.is_team_leader %}leader{% endif %}">
+                        {{ member.username }}
+                        {% if member.is_team_leader %}<span class="leader-badge">Leader</span>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            {% if team.members|length < 4 %}
+            <div class="detail-card invite-card">
+                <h3 class="detail-title">Invite Members</h3>
+                <div class="invite-link-container">
+                    <input type="text" id="inviteLink" value="{{ url_for('join_team', team_id=team.id, _external=True) }}" readonly class="cyber-input">
+                    <button onclick="copyInviteLink()" class="btn btn-secondary">Copy Link</button>
+                </div>
+                <p class="form-hint">Share this link with your teammates</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="team-actions">
+            {% if current_user.is_team_leader %}
+            <form method="POST" action="{{ url_for('disband_team', team_id=team.id) }}" class="action-form">
+                <button type="submit" class="btn btn-danger">Disband Team</button>
+            </form>
+            {% else %}
+            <form method="POST" action="{{ url_for('leave_team', team_id=team.id) }}" class="action-form">
+                <button type="submit" class="btn btn-warning">Leave Team</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<script>
+function copyInviteLink() {
+    const copyText = document.getElementById("inviteLink");
+    copyText.select();
+    document.execCommand("copy");
+    alert("Team invite link copied to clipboard!");
+}
+</script>
+{% endblock %}

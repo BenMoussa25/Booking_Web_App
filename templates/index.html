@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h2 class="hero-title">Join the Ultimate Cybersecurity Challenge</h2>
+        <p class="hero-subtitle">Test your skills in our premier hacking competitions</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Register Now</a>
+            <a href="{{ url_for('events') }}" class="btn btn-secondary">View Events</a>
+        </div>
+    </div>
+</section>
+
+<section class="featured-events">
+    <h2 class="section-title">Featured Events</h2>
+    <div class="event-grid">
+        {% for event in events %}
+        <div class="event-card">
+            <div class="event-card-header">
+                <h3>{{ event.name }}</h3>
+                <span class="event-date">{{ event.start_time.strftime('%b %d, %Y') }}</span>
+            </div>
+            <div class="event-card-body">
+                <p>{{ event.description }}</p>
+                <div class="event-meta">
+                    <span class="event-capacity">{{ event.current_participants }}/{{ event.max_participants }} participants</span>
+                    <span class="event-time">{{ event.start_time.strftime('%H:%M') }} - {{ event.end_time.strftime('%H:%M') }}</span>
+                </div>
+            </div>
+            <div class="event-card-footer">
+                <a href="{{ url_for('events') }}" class="btn btn-small">Learn More</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="about-section">
+    <div class="about-content">
+        <h2 class="section-title">About CyberSphere Congress</h2>
+        <p>CyberSphere Congress is the premier gathering for cybersecurity professionals and enthusiasts. Our competitions are designed to challenge participants with real-world scenarios in a controlled environment.</p>
+        <p>Whether you're a seasoned professional or just starting your cybersecurity journey, there's an event for you.</p>
+    </div>
+    <div class="about-image">
+        <div class="cyber-circle"></div>
+    </div>
+</section>
+{% endblock %}

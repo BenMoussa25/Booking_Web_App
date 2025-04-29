@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Workshop Full Notification</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { color: #e94560; text-align: center; }
+        .button { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            background-color: #e94560; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            margin: 20px 0;
+        }
+        .footer { margin-top: 30px; font-size: 0.9em; text-align: center; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">Workshop Full Notification</h1>
+        
+        <p>Dear {{ user.username }},</p>
+        
+        <p>We regret to inform you that the workshop <strong>{{ event.name }}</strong> has reached full capacity, 
+        and your booking remains on the waitlist.</p>
+        
+        <p>Since chances of availability are low, we recommend you:</p>
+        <ul>
+            <li>Cancel this waitlisted booking</li>
+            <li>Choose another available workshop</li>
+        </ul>
+        
+        <p>You can manage your bookings through your dashboard:</p>
+        <p style="text-align: center;">
+            <a href="{{ url_for('dashboard', _external=True) }}" class="button">Go to Dashboard</a>
+        </p>
+        
+        <p>Thank you for your understanding.</p>
+        
+        <div class="footer">
+            <p>CyberSphere Congress Team</p>
+            <p>© 2023 CyberSphere Congress. All systems secure.</p>
+        </div>
+    </div>
+</body>
+</html>

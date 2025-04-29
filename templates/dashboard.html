@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <h2 class="section-title">Welcome, {{ user.username }}</h2>
+    {% if user.team_name %}
+    <p class="team-name">Team: {{ user.team_name }}</p>
+    {% endif %}
+    
+    <div class="dashboard-card">
+        <h3 class="card-title">Your Bookings</h3>
+        
+        {% if bookings %}
+        <div class="bookings-list">
+            {% for booking in bookings %}
+            <div class="booking-item">
+                <div class="booking-header">
+                    <h4>{{ booking.event.name }}</h4>
+                    <span class="booking-status booking-status-{{ booking.status }}">
+                        {{ booking.status|capitalize }}
+                        {% if booking.is_approved %}(Approved){% endif %}
+                    </span>
+                </div>
+                <div class="booking-body">
+                    <p>{{ booking.event.description }}</p>
+                    <div class="booking-details">
+                        <div class="detail">
+                            <span class="detail-label">Date:</span>
+                            <span class="detail-value">{{ booking.event.start_time.strftime('%B %d, %Y') }}</span>
+                        </div>
+                        <div class="detail">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value">
+                                {% if booking.status == 'pending' %}
+                                    Waiting for approval
+                                {% elif booking.status == 'confirmed' %}
+                                    Confirmed
+                                {% elif booking.status == 'cancelled' %}
+                                    Cancelled
+                                {% else %}
+                                    Waitlisted
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% if booking.status == 'pending' %}
+                <div class="booking-footer">
+                    <a href="{{ url_for('cancel_booking', booking_id=booking.id) }}" 
+                       class="btn btn-danger">Cancel Request</a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>You have no bookings yet.</p>
+            <a href="{{ url_for('events') }}" class="btn btn-primary">Browse Events</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

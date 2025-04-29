@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <h2 class="section-title">Edit Event</h2>
+    
+    <form method="POST" action="{{ url_for('edit_event', event_id=event.id) }}" class="cyber-form">
+        <div class="form-group">
+            <label for="name">Event Name</label>
+            <input type="text" id="name" name="name" value="{{ event.name }}" required class="cyber-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" required class="cyber-input">{{ event.description }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" 
+                   value="{{ event.location }}" required class="cyber-input">
+        </div>
+
+        <div class="form-group">
+            <label for="event_type">Event Type</label>
+            <select id="event_type" name="event_type" class="cyber-input" required>
+                <option value="workshop" {% if event.event_type == 'workshop' %}selected{% endif %}>Workshop</option>
+                <option value="competition" {% if event.event_type == 'competition' %}selected{% endif %}>Competition</option>
+            </select>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="max_participants">Max Participants</label>
+                <input type="number" id="max_participants" name="max_participants" 
+                       value="{{ event.max_participants }}" required class="cyber-input">
+            </div>
+            
+            <div class="form-group" id="max-teams-group" 
+                 style="display: {% if event.event_type == 'competition' %}block{% else %}none{% endif %};">
+                <label for="max_teams">Max Teams</label>
+                <input type="number" id="max_teams" name="max_teams" 
+                       value="{{ event.max_teams if event.max_teams else '' }}" 
+                       {% if event.event_type == 'competition' %}required{% endif %} class="cyber-input">
+            </div>
+            
+            <div class="form-group" id="team-size-group" 
+                 style="display: {% if event.event_type == 'competition' %}block{% else %}none{% endif %};">
+                <label for="team_size">Team Size</label>
+                <input type="number" id="team_size" name="team_size" 
+                       value="{{ event.team_size if event.team_size else '' }}" 
+                       {% if event.event_type == 'competition' %}required{% endif %} class="cyber-input">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="start_time">Start Time</label>
+                <input type="datetime-local" id="start_time" name="start_time" 
+                       value="{{ event.start_time.strftime('%Y-%m-%dT%H:%M') }}" required class="cyber-input">
+            </div>
+            <div class="form-group">
+                <label for="end_time">End Time</label>
+                <input type="datetime-local" id="end_time" name="end_time" 
+                       value="{{ event.end_time.strftime('%Y-%m-%dT%H:%M') }}" required class="cyber-input">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Update Event</button>
+        <a href="{{ url_for('admin') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</section>
+
+<script>
+// Show/hide competition-specific fields
+document.getElementById('event_type').addEventListener('change', function() {
+    const isCompetition = this.value === 'competition';
+    document.getElementById('max-teams-group').style.display = isCompetition ? 'block' : 'none';
+    document.getElementById('team-size-group').style.display = isCompetition ? 'block' : 'none';
+    
+    if (isCompetition) {
+        document.getElementById('max_teams').required = true;
+        document.getElementById('team_size').required = true;
+    } else {
+        document.getElementById('max_teams').required = false;
+        document.getElementById('team_size').required = false;
+    }
+});
+</script>
+{% endblock %}

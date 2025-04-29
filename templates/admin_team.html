@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Team Management{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <h2 class="section-title">Team Management: {{ team.name }}</h2>
+    
+    <div class="team-details">
+        <form method="POST" class="cyber-form">
+            <div class="form-group">
+                <label for="name">Team Name</label>
+                <input type="text" id="name" name="name" value="{{ team.name }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="leader_id">Team Leader</label>
+                <select id="leader_id" name="leader_id" class="cyber-input">
+                    <option value="">-- Select Leader --</option>
+                    {% for member in team.members %}
+                    <option value="{{ member.id }}" {% if member.is_team_leader %}selected{% endif %}>
+                        {{ member.username }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <h3>Team Members</h3>
+            <div class="member-list">
+                {% for member in team.members %}
+                <div class="member-item">
+                    {{ member.username }} ({{ member.email }})
+                    {% if member.is_team_leader %}<span class="badge">Leader</span>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{{ url_for('admin') }}" class="btn btn-secondary">Back to Admin</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

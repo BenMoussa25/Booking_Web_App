@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/app
+      - ./instance:/app/instance
+    environment:
+      - SECRET_KEY=8aeff28f748dc1f91c1692db1684d313
+      - ADMIN_TOKEN=a28d54cd5b19e8af9f072c1879cb73a5
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - ADMIN_PASSWORD=your_secure_password_here
+    command: >
+      sh -c "flask db init &&
+             flask db migrate &&
+             flask db upgrade &&
+             gunicorn --bind 0.0.0.0:5000 app:app"
+    restart: unless-stopped

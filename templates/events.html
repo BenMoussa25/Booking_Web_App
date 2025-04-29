@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Events{% endblock %}
+
+{% block content %}
+<section class="events-section">
+    <h2 class="section-title">All Events</h2>
+    <p class="section-subtitle">Choose your challenge and register to participate</p>
+    
+    <!-- Event type filter tabs -->
+    <div class="event-type-tabs">
+        <a href="{{ url_for('events') }}" class="tab-link {% if not request.args.get('type') %}active{% endif %}">All Events</a>
+        <a href="{{ url_for('events', type='competition') }}" class="tab-link {% if request.args.get('type') == 'competition' %}active{% endif %}">Competitions</a>
+        <a href="{{ url_for('events', type='workshop') }}" class="tab-link {% if request.args.get('type') == 'workshop' %}active{% endif %}">Workshops</a>
+    </div>
+    
+    <div class="events-list">
+        {% for event in events %}
+        <div class="event-item">
+            <div class="event-item-header">
+                <h3>{{ event.name }}</h3>
+                <span class="event-type-badge {% if event.event_type == 'competition' %}competition{% else %}workshop{% endif %}">
+                    {{ event.event_type|upper }}
+                </span>
+                <span class="event-status 
+                    {% if event.event_type == 'competition' %}
+                        {% if event.max_teams is none or event.current_teams is none %}
+                            status-unknown
+                        {% elif event.current_teams >= event.max_teams %}
+                            status-full
+                        {% else %}
+                            status-open
+                        {% endif %}
+                    {% else %}
+                        {% if event.max_participants is none or event.current_participants is none %}
+                            status-unknown
+                        {% elif event.current_participants >= event.max_participants %}
+                            status-full
+                        {% else %}
+                            status-open
+                        {% endif %}
+                    {% endif %}">
+                    {% if event.event_type == 'competition' %}
+                        {% if event.max_teams is none or event.current_teams is none %}
+                            UNKNOWN
+                        {% elif event.current_teams >= event.max_teams %}
+                            FULL
+                        {% else %}
+                            OPEN
+                        {% endif %}
+                    {% else %}
+                        {% if event.max_participants is none or event.current_participants is none %}
+                            UNKNOWN
+                        {% elif event.current_participants >= event.max_participants %}
+                            FULL
+                        {% else %}
+                            OPEN
+                        {% endif %}
+                    {% endif %}
+                </span>
+            </div>
+            <div class="event-item-body">
+                <p>{{ event.description }}</p>
+                <div class="event-details">
+                    <div class="detail">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">{{ event.location }}</span>
+                    </div>
+                    <div class="detail">
+                        <span class="detail-label">Type:</span>
+                        <span class="detail-value">{{ event.event_type|capitalize }}</span>
+                    </div>
+                    <div class="detail">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value">{{ event.start_time.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    <div class="detail">
+                        <span class="detail-label">Time:</span>
+                        <span class="detail-value">{{ event.start_time.strftime('%H:%M') }} - {{ event.end_time.strftime('%H:%M') }}</span>
+                    </div>
+                    {% if event.event_type == 'competition' %}
+                    <div class="detail">
+                        <span class="detail-label">Teams:</span>
+                        <span class="detail-value">
+                            {{ event.current_teams }}/{{ event.max_teams }}
+                        </span>
+                    </div>
+                    {% else %}
+                    <div class="detail">
+                        <span class="detail-label">Participants:</span>
+                        <span class="detail-value">
+                            {{ event.current_participants }}/{{ event.max_participants }}
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="event-item-footer">
+                {% if 'user_id' in session %}
+                    {% if event.event_type == 'competition' %}
+                        {% if event.max_teams is none or event.current_teams is none %}
+                            <button type="button" class="btn btn-secondary" disabled>Event Not Available</button>
+                        {% elif event.current_teams < event.max_teams %}
+                            <a href="{{ url_for('team_selection', event_id=event.id) }}" class="btn btn-primary">Join Competition</a>
+                        {% else %}
+                            <form method="POST" action="{{ url_for('book_event', event_id=event.id) }}">
+                                <button type="submit" class="btn btn-warning">Join Waitlist</button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        {% if event.max_participants is none or event.current_participants is none %}
+                            <button type="button" class="btn btn-secondary" disabled>Event Not Available</button>
+                        {% elif event.current_participants < event.max_participants %}
+                            <form method="POST" action="{{ url_for('book_event', event_id=event.id) }}">
+                                <button type="submit" class="btn btn-primary">Book Now</button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{{ url_for('book_event', event_id=event.id) }}">
+                                <button type="submit" class="btn btn-warning">Join Waitlist</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary">Login to Book</a>
+                {% endif %}
+                <a href="#" class="btn btn-text">Event Details</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="no-events">
+            <p>No events available at the moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
